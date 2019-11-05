@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.4.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.4.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="9.4.001" expanded="true" height="68" name="Read CSV" width="90" x="45" y="34">
+        <parameter key="csv_file" value="C:\Users\Gibbs\Desktop\Group Project\ASKCI-master\amino_acid_dataset.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="trim_lines" value="false"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="true"/>
+        <parameter key="comment_characters" value="#"/>
+        <parameter key="starting_row" value="1"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="grouping_character" value=","/>
+        <parameter key="infinity_representation" value=""/>
+        <parameter key="date_format" value=""/>
+        <parameter key="first_row_as_names" value="true"/>
+        <list key="annotations"/>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United States)"/>
+        <parameter key="encoding" value="windows-1252"/>
+        <parameter key="read_all_values_as_polynominal" value="false"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="A.true.real.attribute"/>
+          <parameter key="1" value="C.true.real.attribute"/>
+          <parameter key="2" value="D.true.real.attribute"/>
+          <parameter key="3" value="E.true.real.attribute"/>
+          <parameter key="4" value="F.true.real.attribute"/>
+          <parameter key="5" value="G.true.real.attribute"/>
+          <parameter key="6" value="H.true.real.attribute"/>
+          <parameter key="7" value="I.true.real.attribute"/>
+          <parameter key="8" value="K.true.real.attribute"/>
+          <parameter key="9" value="L.true.real.attribute"/>
+          <parameter key="10" value="M.true.real.attribute"/>
+          <parameter key="11" value="N.true.real.attribute"/>
+          <parameter key="12" value="P.true.real.attribute"/>
+          <parameter key="13" value="Q.true.real.attribute"/>
+          <parameter key="14" value="R.true.real.attribute"/>
+          <parameter key="15" value="S.true.real.attribute"/>
+          <parameter key="16" value="T.true.real.attribute"/>
+          <parameter key="17" value="V.true.real.attribute"/>
+          <parameter key="18" value="W.true.real.attribute"/>
+          <parameter key="19" value="Y.true.real.attribute"/>
+          <parameter key="20" value="DNA.false.polynominal.attribute"/>
+          <parameter key="21" value="RNA.false.polynominal.attribute"/>
+          <parameter key="22" value="DRNA.true.polynominal.label"/>
+          <parameter key="23" value="nonDRNA.false.polynominal.attribute"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="false"/>
+        <parameter key="datamanagement" value="double_array"/>
+        <parameter key="data_management" value="auto"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="9.4.001" expanded="true" height="82" name="Set Role" width="90" x="179" y="34">
+        <parameter key="attribute_name" value="DRNA"/>
+        <parameter key="target_role" value="label"/>
+        <list key="set_additional_roles"/>
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="9.4.001" expanded="true" height="103" name="Replace Missing Values" width="90" x="313" y="34">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="create_view" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="default" value="average"/>
+        <list key="columns"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="9.4.001" expanded="true" height="124" name="Multiply" width="90" x="45" y="187"/>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="9.4.001" expanded="true" height="145" name="Cross Validation NB" width="90" x="246" y="595">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="automatic"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="naive_bayes" compatibility="9.4.001" expanded="true" height="82" name="Naive Bayes (3)" width="90" x="179" y="34">
+            <parameter key="laplace_correction" value="true"/>
+          </operator>
+          <connect from_port="training set" to_op="Naive Bayes (3)" to_port="training set"/>
+          <connect from_op="Naive Bayes (3)" from_port="model" to_port="model"/>
+          <portSpacing port="source_training set" spacing="0"/>
+          <portSpacing port="sink_model" spacing="0"/>
+          <portSpacing port="sink_through 1" spacing="0"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="9.4.001" expanded="true" height="82" name="Apply Model (9)" width="90" x="112" y="34">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <operator activated="true" class="performance" compatibility="9.4.001" expanded="true" height="82" name="Performance NB CV" width="90" x="246" y="34">
+            <parameter key="use_example_weights" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (9)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (9)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (9)" from_port="labelled data" to_op="Performance NB CV" to_port="labelled data"/>
+          <connect from_op="Performance NB CV" from_port="performance" to_port="performance 1"/>
+          <connect from_op="Performance NB CV" from_port="example set" to_port="test set results"/>
+          <portSpacing port="source_model" spacing="0"/>
+          <portSpacing port="source_test set" spacing="0"/>
+          <portSpacing port="source_through 1" spacing="0"/>
+          <portSpacing port="sink_test set results" spacing="0"/>
+          <portSpacing port="sink_performance 1" spacing="0"/>
+          <portSpacing port="sink_performance 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="converters:confusionmatrix_2_example_set" compatibility="0.6.000" expanded="true" height="82" name="Confusion Matrix to ExampleSet" width="90" x="447" y="595"/>
+      <operator activated="true" class="write_csv" compatibility="9.4.001" expanded="true" height="82" name="Write CSV" width="90" x="648" y="595">
+        <parameter key="csv_file" value="C:\Users\Gibbs\Desktop\Group Project\drna_nb.csv"/>
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <operator activated="true" class="nominal_to_binominal" compatibility="9.4.001" expanded="true" height="103" name="Nominal to Binominal (3)" width="90" x="246" y="391">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="create_view" value="false"/>
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="DRNA"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="nominal"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="file_path"/>
+        <parameter key="block_type" value="single_value"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="single_value"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="true"/>
+        <parameter key="transform_binominal" value="false"/>
+        <parameter key="use_underscore_in_name" value="false"/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="9.4.001" expanded="true" height="145" name="Cross Validation DT" width="90" x="246" y="187">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="automatic"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="9.4.000" expanded="true" height="103" name="Decision Tree (4)" width="90" x="179" y="34">
+            <parameter key="criterion" value="gain_ratio"/>
+            <parameter key="maximal_depth" value="10"/>
+            <parameter key="apply_pruning" value="true"/>
+            <parameter key="confidence" value="0.1"/>
+            <parameter key="apply_prepruning" value="true"/>
+            <parameter key="minimal_gain" value="0.01"/>
+            <parameter key="minimal_leaf_size" value="2"/>
+            <parameter key="minimal_size_for_split" value="4"/>
+            <parameter key="number_of_prepruning_alternatives" value="3"/>
+          </operator>
+          <connect from_port="training set" to_op="Decision Tree (4)" to_port="training set"/>
+          <connect from_op="Decision Tree (4)" from_port="model" to_port="model"/>
+          <portSpacing port="source_training set" spacing="0"/>
+          <portSpacing port="sink_model" spacing="0"/>
+          <portSpacing port="sink_through 1" spacing="0"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="9.4.001" expanded="true" height="82" name="Apply Model (5)" width="90" x="112" y="34">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <operator activated="true" class="performance" compatibility="9.4.001" expanded="true" height="82" name="Performance DT CV" width="90" x="246" y="34">
+            <parameter key="use_example_weights" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (5)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (5)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (5)" from_port="labelled data" to_op="Performance DT CV" to_port="labelled data"/>
+          <connect from_op="Performance DT CV" from_port="performance" to_port="performance 1"/>
+          <connect from_op="Performance DT CV" from_port="example set" to_port="test set results"/>
+          <portSpacing port="source_model" spacing="0"/>
+          <portSpacing port="source_test set" spacing="0"/>
+          <portSpacing port="source_through 1" spacing="0"/>
+          <portSpacing port="sink_test set results" spacing="0"/>
+          <portSpacing port="sink_performance 1" spacing="0"/>
+          <portSpacing port="sink_performance 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="9.4.001" expanded="true" height="145" name="Cross Validation SVM" width="90" x="380" y="391">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="automatic"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="support_vector_machine" compatibility="9.4.001" expanded="true" height="124" name="SVM (3)" width="90" x="179" y="34">
+            <parameter key="kernel_type" value="dot"/>
+            <parameter key="kernel_gamma" value="0.2"/>
+            <parameter key="kernel_sigma1" value="1.0"/>
+            <parameter key="kernel_sigma2" value="0.0"/>
+            <parameter key="kernel_sigma3" value="2.0"/>
+            <parameter key="kernel_shift" value="1.0"/>
+            <parameter key="kernel_degree" value="2.0"/>
+            <parameter key="kernel_a" value="1.0"/>
+            <parameter key="kernel_b" value="0.0"/>
+            <parameter key="kernel_cache" value="200"/>
+            <parameter key="C" value="0.0"/>
+            <parameter key="convergence_epsilon" value="0.001"/>
+            <parameter key="max_iterations" value="100000"/>
+            <parameter key="scale" value="true"/>
+            <parameter key="calculate_weights" value="true"/>
+            <parameter key="return_optimization_performance" value="true"/>
+            <parameter key="L_pos" value="1.0"/>
+            <parameter key="L_neg" value="1.0"/>
+            <parameter key="epsilon" value="0.0"/>
+            <parameter key="epsilon_plus" value="0.0"/>
+            <parameter key="epsilon_minus" value="0.0"/>
+            <parameter key="balance_cost" value="false"/>
+            <parameter key="quadratic_loss_pos" value="false"/>
+            <parameter key="quadratic_loss_neg" value="false"/>
+            <parameter key="estimate_performance" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="SVM (3)" to_port="training set"/>
+          <connect from_op="SVM (3)" from_port="model" to_port="model"/>
+          <portSpacing port="source_training set" spacing="0"/>
+          <portSpacing port="sink_model" spacing="0"/>
+          <portSpacing port="sink_through 1" spacing="0"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="9.4.001" expanded="true" height="82" name="Apply Model (6)" width="90" x="112" y="34">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <operator activated="true" class="performance" compatibility="9.4.001" expanded="true" height="82" name="Performance SVM CV" width="90" x="246" y="34">
+            <parameter key="use_example_weights" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (6)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (6)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (6)" from_port="labelled data" to_op="Performance SVM CV" to_port="labelled data"/>
+          <connect from_op="Performance SVM CV" from_port="performance" to_port="performance 1"/>
+          <connect from_op="Performance SVM CV" from_port="example set" to_port="test set results"/>
+          <portSpacing port="source_model" spacing="0"/>
+          <portSpacing port="source_test set" spacing="0"/>
+          <portSpacing port="source_through 1" spacing="0"/>
+          <portSpacing port="sink_test set results" spacing="0"/>
+          <portSpacing port="sink_performance 1" spacing="0"/>
+          <portSpacing port="sink_performance 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="converters:confusionmatrix_2_example_set" compatibility="0.6.000" expanded="true" height="82" name="Confusion Matrix to ExampleSet (3)" width="90" x="514" y="391"/>
+      <operator activated="true" class="write_csv" compatibility="9.4.001" expanded="true" height="82" name="Write CSV (2)" width="90" x="648" y="391">
+        <parameter key="csv_file" value="C:\Users\Gibbs\Desktop\Group Project\drna_svm.csv"/>
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <operator activated="true" class="converters:confusionmatrix_2_example_set" compatibility="0.6.000" expanded="true" height="82" name="Confusion Matrix to ExampleSet (2)" width="90" x="447" y="187"/>
+      <operator activated="true" class="write_csv" compatibility="9.4.001" expanded="true" height="82" name="Write CSV (3)" width="90" x="648" y="187">
+        <parameter key="csv_file" value="C:\Users\Gibbs\Desktop\Group Project\drna_dt.csv"/>
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Replace Missing Values" to_port="example set input"/>
+      <connect from_op="Replace Missing Values" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Cross Validation DT" to_port="example set"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Nominal to Binominal (3)" to_port="example set input"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Cross Validation NB" to_port="example set"/>
+      <connect from_op="Cross Validation NB" from_port="performance 1" to_op="Confusion Matrix to ExampleSet" to_port="per"/>
+      <connect from_op="Confusion Matrix to ExampleSet" from_port="exa" to_op="Write CSV" to_port="input"/>
+      <connect from_op="Confusion Matrix to ExampleSet" from_port="ori" to_port="result 3"/>
+      <connect from_op="Nominal to Binominal (3)" from_port="example set output" to_op="Cross Validation SVM" to_port="example set"/>
+      <connect from_op="Cross Validation DT" from_port="performance 1" to_op="Confusion Matrix to ExampleSet (2)" to_port="per"/>
+      <connect from_op="Cross Validation SVM" from_port="performance 1" to_op="Confusion Matrix to ExampleSet (3)" to_port="per"/>
+      <connect from_op="Confusion Matrix to ExampleSet (3)" from_port="exa" to_op="Write CSV (2)" to_port="input"/>
+      <connect from_op="Confusion Matrix to ExampleSet (3)" from_port="ori" to_port="result 2"/>
+      <connect from_op="Confusion Matrix to ExampleSet (2)" from_port="exa" to_op="Write CSV (3)" to_port="input"/>
+      <connect from_op="Confusion Matrix to ExampleSet (2)" from_port="ori" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+    </process>
+  </operator>
+</process>
