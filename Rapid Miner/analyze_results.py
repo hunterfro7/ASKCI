@@ -4,6 +4,7 @@ import math
 baseline_files = ['dna_svm.csv','rna_svm.csv','drna_svm.csv','nondrna_svm.csv']
 design_one_files = ['dna_dt.csv','rna_dt.csv','drna_dt.csv','nondrna_dt.csv']
 design_two_files = ['dna_nb.csv','rna_nb.csv','drna_nb.csv','nondrna_nb.csv']
+design_three_files = ['dna_knn.csv','rna_knn.csv','drna_knn.csv','nondrna_knn.csv']
 total_tp, total_mcc = 0, 0
 
 
@@ -67,14 +68,16 @@ def analyze_design(files):
 
 
 outcome,quality = [''] * 19,[''] * 19
-results_base, results_one, results_two = [],[],[]
+results_base, results_one, results_two, results_three = [],[],[],[]
 results_best = ['']*18
 results_base = analyze_design(baseline_files)
 results_one = analyze_design(design_one_files)
 results_two = analyze_design(design_two_files)
+results_three = analyze_design(design_three_files)
 results_base.insert(0,'Baseline result')
 results_one.insert(0, 'Design 1')
 results_two.insert(0, 'Design 2')
+results_three.insert(0, 'Design 3')
 results_best.insert(0,'Best Design')
 outcome[0] = 'Outcome'
 quality[0] = 'Quality Measure'
@@ -98,11 +101,12 @@ c_list.append(quality)
 c_list.append(results_base)
 c_list.append(results_one)
 c_list.append(results_two)
+c_list.append(results_three)
 c_list.append(results_best)
 for i in range(0,19):
 	string = ''
 	for c in c_list:
-		if (i != 0) and (c == results_one or c == results_two):
+		if (i != 0) and (c == results_one or c == results_two or c == results_three):
 			string = string + '	' + c[i] + '		'
 		elif c != 3 or c != 4:
 			string = string + c[i] + '		'
